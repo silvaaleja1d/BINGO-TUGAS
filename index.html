@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUGAS - Bingo Marino Profesional</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap');
+
+        /* --- CARGA DE FUENTE ADELLINE (NOMBRE EXACTO DEL ARCHIVO) --- */
+        @font-face {
+            font-family: 'Adelline';
+            src: url('Adelline PERSONAL USE ONLY!.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --azul-profundo: #0a2a5e;
+            --oro-suave: #d4af37;
+            --blanco-solido: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background-image: url('FONDO.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            overflow: hidden;
+        }
+
+        /* --- MENÚ DE INICIO (ELEMENTOS SUELTOS SIN PANEL) --- */
+        #menu-inicio {
+            text-align: center;
+            max-width: 500px; width: 90%; z-index: 10;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .logo-inicio { 
+            width: 190px; 
+            margin-bottom: 10px; 
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.6)); 
+        }
+        
+        h1 { 
+            font-family: 'Adelline', cursive; 
+            font-size: 9rem; 
+            margin: -10px 0 50px 0; 
+            color: white;
+            font-weight: normal;
+            text-shadow: 0 5px 20px rgba(0,0,0,0.9);
+        }
+
+        .btn-flotante {
+            display: block; width: 100%; padding: 15px 40px; margin: 20px 0;
+            font-family: 'Adelline', cursive; 
+            font-size: 2.5rem; 
+            cursor: pointer;
+            border: 2.5px solid white; 
+            border-radius: 60px;
+            transition: all 0.4s ease;
+            color: white;
+            background: rgba(0, 0, 0, 0.25); 
+            backdrop-filter: blur(8px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .btn-flotante:hover {
+            transform: translateY(-5px);
+            border-color: var(--oro-suave);
+            color: var(--oro-suave);
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        /* --- PANTALLAS --- */
+        .pantalla { display: none; width: 100%; height: 100vh; justify-content: center; align-items: center; flex-direction: column; position: relative; }
+
+        /* --- MODO JUGADOR (TOTALMENTE INTACTO) --- */
+        .contenedor-carton {
+            width: 90vw; max-width: 650px; aspect-ratio: 1080 / 1380;
+            position: relative; background-image: url('CARTON_TUGAS.jpg');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+        }
+
+        .grid-bingo {
+            position: absolute;
+            top: 20.3%; 
+            left: 9.3%; width: 81.4%; height: 65.2%;
+            display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr);
+        }
+
+        .celda { display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; }
+        .celda img { width: 85%; height: 85%; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); pointer-events: none; }
+        .celda.marcada::after {
+            content: ''; position: absolute; width: 70%; height: 70%;
+            border: 3px solid #b08d57; border-radius: 50%;
+            background: rgba(176, 141, 87, 0.3); z-index: 10;
+        }
+
+        .btn-atras-fijo {
+            position: absolute; bottom: 3rem;
+            padding: 12px 40px; background: var(--blanco-solido);
+            border: 2px solid var(--azul-profundo); color: var(--azul-profundo);
+            font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase; cursor: pointer; z-index: 100;
+            border-radius: 5px;
+        }
+
+        /* --- PANEL DICTADOR --- */
+        .panel-dictador-box {
+            background: var(--blanco-solido); padding: 40px; border: 2px solid var(--azul-profundo); 
+            text-align: center; border-radius: 15px; width: 90%; max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="menu-inicio">
+        <img src="ALMAR.jpg" class="logo-inicio">
+        <h1>TUGAS</h1>
+        <button class="btn-flotante" onclick="navegar('jugador')">Entrar a Jugar</button>
+        <button class="btn-flotante" onclick="navegar('dictador')">Modo Dictador</button>
+    </div>
+
+    <div id="pantalla-jugador" class="pantalla">
+        <div class="contenedor-carton">
+            <div id="carton-body" class="grid-bingo"></div>
+        </div>
+        <button class="btn-atras-fijo" onclick="location.reload()">← Volver al Inicio</button>
+    </div>
+
+    <div id="pantalla-dictador" class="pantalla">
+        <div class="panel-dictador-box">
+            <h2 style="font-family:'Adelline', cursive; color:var(--azul-profundo); font-size: 4rem; font-weight: normal; margin:0;">Panel Dictador</h2>
+            <button class="btn-flotante" style="font-size:1.8rem; padding: 10px; margin: 20px 0; background: var(--azul-profundo);" onclick="cantar()">¡Cantar!</button>
+            <div id="visor" style="margin-top:20px; min-height:180px; display:flex; flex-direction:column; align-items:center;">
+                <div id="letra-c" style="font-size:7rem; font-family:'Adelline', cursive; color:var(--azul-profundo); font-weight: normal;"></div>
+                <div id="img-c"></div>
+            </div>
+        </div>
+        <button class="btn-atras-fijo" onclick="location.reload()">← Regresar</button>
+    </div>
+
+    <script>
+        const especies = [
+            'TORTUGA VERDE.png', 'TORTUGA CAREY.png', 'TORTUGA LAUD.png', 
+            'TORTUGA CAGUAMA.png', 'TORTUGA GOLFINA.png'
+        ];
+
+        function navegar(d) {
+            document.getElementById('menu-inicio').style.display = 'none';
+            document.getElementById('pantalla-' + d).style.display = 'flex';
+            if(d === 'jugador') generarCartonBingo();
+        }
+
+        function generarCartonBingo() {
+            const grid = document.getElementById('carton-body');
+            grid.innerHTML = '';
+            let columnas = [];
+            for (let c = 0; c < 5; c++) {
+                let columnaEspecies = [...especies].sort(() => Math.random() - 0.5);
+                columnas.push(columnaEspecies);
+            }
+            for (let fila = 0; fila < 5; fila++) {
+                for (let col = 0; col < 5; col++) {
+                    const celda = document.createElement('div');
+                    celda.className = 'celda';
+                    const idLineal = (fila * 5) + col;
+                    if (idLineal === 12) {
+                        grid.appendChild(celda);
+                    } else {
+                        const especie = columnas[col][fila];
+                        celda.innerHTML = `<img src="${especie}">`;
+                        celda.onclick = function() { this.classList.toggle('marcada'); };
+                        grid.appendChild(celda);
+                    }
+                }
+            }
+        }
+
+        function cantar() {
+            const l = ['T','U','G','A','S'];
+            document.getElementById('letra-c').innerText = l[Math.floor(Math.random()*5)];
+            const img = especies[Math.floor(Math.random()*5)];
+            document.getElementById('img-c').innerHTML = `<img src="${img}" style="width:110px;">`;
+        }
+    </script>
+</body>
+</html>
